@@ -4,17 +4,14 @@
 # https://aka.ms/yaml
 
 trigger:
-- develop
+- master
 
 pool:
   name: Dev
   demands:
    - agent.name -equals Dev
 
-jobs:
--  job: Docker
-   steps:
-     - 
+steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'DockerHub'
