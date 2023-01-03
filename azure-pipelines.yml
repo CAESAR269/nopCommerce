@@ -11,9 +11,7 @@ pool:
    - agent.name -equals Dev
 
 steps:
-- script: sudo curl -sSL https://get.docker.com/ | sh
-  displayName: Docker Install
-
+  - 
 - task: Docker@2
   inputs:
     containerRegistry: 'DockerHub'
