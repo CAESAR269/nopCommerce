@@ -13,5 +13,6 @@ steps:
 - task: Docker@2
   inputs:
     containerRegistry: 'Docker Hub'
+    repository: 'caesar269 / nopcommerce'
     command: 'buildAndPush'
-    Dockerfile: '**/*Dockerfile'
+    Dockerfile: '**/Dockerfile'
