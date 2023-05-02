@@ -9,7 +9,7 @@ pipeline {
     }
     stage('build'){
       steps {
-        sh 'dotnet build nopCommerce/src/NopCommerce.sln'
+        sh ' docker build -f Dockerfile --tag nopcommerce .'
       }
     }
   }
