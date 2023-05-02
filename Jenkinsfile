@@ -9,7 +9,7 @@ pipeline {
     }
     stage('build'){
       steps {
-        sh 'dotnet build **/NopCommerce.sln'
+        sh 'dotnet build nopCommerce/src/NopCommerce.sln'
       }
     }
   }
