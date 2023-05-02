@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'dotNET' }
+  agent { label 'Docker' }
   stages {
     stage('vcs'){
       steps {
