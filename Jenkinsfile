@@ -1,9 +1,9 @@
 pipeline {
-  agent { label 'DotNET' }
+  agent { label 'dotNET' }
   stages {
     stage('vcs'){
       steps {
-      git branch: 'develop'
+      git branch: 'develop',
           url: 'https://github.com/CAESAR269/nopCommerce.git'
       }
     }
