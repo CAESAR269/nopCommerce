@@ -16,4 +16,4 @@ steps:
     repository: 'tsar7'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: '($(Build.BuildId)'
+    tags: '$(Build.BuildId)'
