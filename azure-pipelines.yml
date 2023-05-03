@@ -9,11 +9,28 @@ trigger:
 pool:
     vmImage: 'ubuntu-latest'
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
-- task: Docker@2
+- task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
-    containerRegistry: 'ACR'
-    repository: 'tsar7'
-    command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
-    tags: '$(Build.BuildId)'
+    command: build
+    projects: '**/*.sln'
+    arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: true
+    zipAfterPublish: true
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: '**/*.zip'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
