@@ -6,13 +6,13 @@
 trigger:
 - develop
 
-pool:
-    vmImage: 'ubuntu-latest'
+pool: Az-Pool
 
 steps:
 - task: Docker@2
   inputs:
-    containerRegistry: 'ACR'
-    repository: 'tsar6'
+    containerRegistry: 'DockerHub'
+    repository: 'caesar269 / nopcommerce'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    tags: 'latest'
