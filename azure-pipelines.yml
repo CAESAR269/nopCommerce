@@ -26,6 +26,6 @@ stages:
          zipAfterPublish: true
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: '$(System.DefaultWorkingDirectory)'
+          PathtoPublish: '$(System.DefaultWorkingDirectory/**/*.zip)'
           ArtifactName: 'Nop'
           publishLocation: 'Container'
