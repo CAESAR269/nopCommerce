@@ -10,11 +10,27 @@ pool:
   vmImage: ubuntu-latest
 
 
-steps:
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1(977812bc-0cfb-4c57-8912-a7804ccf8fba)'
-    appType: 'webAppLinux'
-    WebAppName: 'tsar6'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+stages:
+  - stage: 
+    jobs:
+    - job: 
+      steps:
+      - task: DotNetCoreCLI@2
+        inputs:
+         command: 'build'
+         projects: '**/*.sln'
+      - task: DotNetCoreCLI@2
+        inputs:
+         command: 'publish'
+         publishWebProjects: true
+         zipAfterPublish: true
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(System.DefaultWorkingDirectory)'
+          Contents: '**/.zip'
+          TargetFolder: '$(Build.StagingDirectory)'
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.StagingDirectory)'
+          ArtifactName: 'Nop'
+          publishLocation: 'Container'
