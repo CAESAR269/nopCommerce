@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Plugin.Shipping.UPS.Models;
@@ -20,7 +16,7 @@ using Nop.Web.Framework.Mvc.Filters;
 namespace Nop.Plugin.Shipping.UPS.Controllers
 {
     [AuthorizeAdmin]
-    [Area(AreaNames.Admin)]
+    [Area(AreaNames.ADMIN)]
     [AutoValidateAntiforgeryToken]
     public class UPSShippingController : BasePluginController
     {
@@ -69,9 +65,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             var model = new UPSShippingModel
             {
                 AccountNumber = _upsSettings.AccountNumber,
-                AccessKey = _upsSettings.AccessKey,
-                Username = _upsSettings.Username,
-                Password = _upsSettings.Password,
+                ClientId = _upsSettings.ClientId,
+                ClientSecret = _upsSettings.ClientSecret,
                 UseSandbox = _upsSettings.UseSandbox,
                 AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge,
                 InsurePackage = _upsSettings.InsurePackage,
@@ -88,8 +83,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             };
 
             //prepare offered delivery services
-            var servicesCodes = _upsSettings.CarrierServicesOffered.Split(':', StringSplitOptions.RemoveEmptyEntries)
-                .Select(idValue => idValue.Trim('[', ']')).ToList();
+            var servicesCodes = _upsSettings.CarrierServicesOffered?.Split(':', StringSplitOptions.RemoveEmptyEntries)
+                .Select(idValue => idValue.Trim('[', ']')).ToList() ?? new List<string>();
 
             //prepare available options
             model.AvailableCustomerClassifications = (await CustomerClassification.DailyRates.ToSelectListAsync(false))
@@ -133,9 +128,8 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             //save settings
             _upsSettings.AccountNumber = model.AccountNumber;
-            _upsSettings.AccessKey = model.AccessKey;
-            _upsSettings.Username = model.Username;
-            _upsSettings.Password = model.Password;
+            _upsSettings.ClientId = model.ClientId;
+            _upsSettings.ClientSecret = model.ClientSecret;
             _upsSettings.UseSandbox = model.UseSandbox;
             _upsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
             _upsSettings.CustomerClassification = (CustomerClassification)model.CustomerClassification;

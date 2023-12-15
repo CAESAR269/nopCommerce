@@ -9,7 +9,6 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Infrastructure;
 using Nop.Data;
@@ -19,7 +18,7 @@ using Nop.Services.Stores;
 
 namespace Nop.Web.Framework.Migrations.UpgradeTo460
 {
-    [NopMigration("2022-12-01 14:00:03", "4.60.0", UpdateMigrationType.Settings, MigrationProcessType.Update)]
+    [NopUpdateMigration("2023-07-26 14:00:00", "4.60", UpdateMigrationType.Settings)]
     public class SettingMigration : MigrationBase
     {
         /// <summary>Collect the UP migration expressions</summary>
@@ -400,7 +399,16 @@ namespace Nop.Web.Framework.Migrations.UpgradeTo460
                 settingService.SaveSetting(pdfSettings, settings => settings.FontFamily);
 
                 //delete old setting
-                settingRepository.Delete(setting => setting.Name == $"{nameof(PdfSettings)}.FontFileName".ToLower());
+                settingRepository.Delete(setting => setting.Name.Equals($"{nameof(PdfSettings)}.FontFileName", StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            var productEditorSettings = settingService.LoadSetting<ProductEditorSettings>();
+
+            //#1934
+            if (!settingService.SettingExists(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly))
+            {
+                productEditorSettings.DisplayAttributeCombinationImagesOnly = false;
+                settingService.SaveSetting(productEditorSettings, settings => settings.DisplayAttributeCombinationImagesOnly);
             }
         }
 

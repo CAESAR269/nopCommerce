@@ -16,8 +16,8 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations.Installation
 {
-    [NopMigration("2020/03/13 09:36:08:9037677", "Nop.Data base indexes", MigrationProcessType.Installation)]
-    public class Indexes : AutoReversingMigration
+    [NopSchemaMigration("2020/03/13 09:36:08:9037677", "Nop.Data base indexes", MigrationProcessType.Installation)]
+    public class Indexes : ForwardOnlyMigration
     {
         #region Methods
 
@@ -88,6 +88,10 @@ namespace Nop.Data.Migrations.Installation
 
             Create.Index("IX_ProductTag_Name").OnTable(nameof(ProductTag))
                 .OnColumn(nameof(ProductTag.Name)).Ascending()
+                .WithOptions().NonClustered();
+
+            Create.Index("IX_Product_Name").OnTable(nameof (Product))
+                .OnColumn(nameof(Product.Name)).Ascending()
                 .WithOptions().NonClustered();
 
             Create.Index("IX_Product_SubjectToAcl").OnTable(nameof(Product))
@@ -231,6 +235,10 @@ namespace Nop.Data.Migrations.Installation
 
             Create.Index("IX_Forums_Forum_DisplayOrder").OnTable(NameCompatibilityManager.GetTableName(typeof(Forum)))
                 .OnColumn(nameof(Forum.DisplayOrder)).Ascending()
+                .WithOptions().NonClustered();
+
+            Create.Index("IX_Forums_Topic_Subject").OnTable(NameCompatibilityManager.GetTableName(typeof(ForumTopic)))
+                .OnColumn(nameof(ForumTopic.Subject)).Ascending()
                 .WithOptions().NonClustered();
 
             Create.Index("IX_Customer_Username").OnTable(nameof(Customer))

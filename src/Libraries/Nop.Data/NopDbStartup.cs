@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using FluentMigrator;
+﻿using FluentMigrator;
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
 using FluentMigrator.Runner.Initialization;
@@ -8,6 +6,7 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Data.Mapping;
 using Nop.Data.Migrations;
@@ -63,7 +62,7 @@ namespace Nop.Data
             using var scope = services.BuildServiceProvider().CreateScope();
             var runner = scope.ServiceProvider.GetRequiredService<IMigrationManager>();
             foreach (var assembly in mAssemblies)
-                runner.ApplyUpMigrations(assembly, MigrationProcessType.NoDependencies);
+                runner.ApplyUpSchemaMigrations(assembly);
         }
 
         /// <summary>
@@ -72,6 +71,9 @@ namespace Nop.Data
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            var config = Singleton<AppSettings>.Instance.Get<CacheConfig>();
+
+            LinqToDB.Common.Configuration.Linq.DisableQueryCache = config.LinqDisableQueryCache;
         }
 
         /// <summary>
